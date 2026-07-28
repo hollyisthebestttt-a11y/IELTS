@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Simon Ideas Practice</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#4f46e5;--primary-dark:#4338ca;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--bg:#f8fafc;--card-bg:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+        .header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:1.5rem;text-align:center;box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+        .header h1{font-size:1.8rem;margin-bottom:.5rem}
+        .header p{opacity:.9;font-size:.9rem}
+        .nav{display:flex;justify-content:center;gap:.5rem;padding:1rem;background:#fff;border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:100}
+        .nav-btn{padding:.6rem 1.2rem;border:none;border-radius:.5rem;background:var(--bg);color:var(--text);cursor:pointer;font-size:.85rem;transition:all .2s}
+        .nav-btn:hover{background:var(--border)}
+        .nav-btn.active{background:var(--primary);color:#fff}
+        .main{max-width:1200px;margin:0 auto;padding:1.5rem}
+        .stats-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+        .stat-card{flex:1;min-width:120px;background:#fff;padding:1rem;border-radius:.75rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .stat-card .number{font-size:1.8rem;font-weight:bold;color:var(--primary)}
+        .stat-card .label{color:var(--text-light);font-size:.8rem}
+        .view{display:none}.view.active{display:block}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+        .card{background:#fff;border-radius:1rem;padding:1.5rem;cursor:pointer;transition:all .3s;border:2px solid transparent;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .card:hover{transform:translateY(-4px);box-shadow:0 10px 20px rgba(0,0,0,.1);border-color:var(--primary)}
+        .card .priority{display:inline-block;background:var(--primary);color:#fff;padding:.25rem .75rem;border-radius:1rem;font-size:.75rem;margin-bottom:.75rem}
+        .card .icon{font-size:2rem;margin-bottom:.5rem}
+        .card h3{font-size:1.2rem;margin-bottom:.25rem}
+        .card .en-name{color:var(--text-light);font-size:.85rem;margin-bottom:.75rem}
+        .card .count{color:var(--text-light);font-size:.8rem}
+        .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+        .tag{background:var(--bg);padding:.25rem .75rem;border-radius:.5rem;font-size:.8rem}
+        .back-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:var(--bg);border:none;border-radius:.5rem;cursor:pointer;margin-bottom:1.5rem;color:var(--text);font-size:.9rem}
+        .back-btn:hover{background:var(--border)}
+        .topic-header{text-align:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+        .topic-header h2{font-size:1.8rem;margin-bottom:.5rem}
+        .topic-header .subtopics{color:var(--text-light);font-size:.9rem;margin-top:.5rem}
+        .section{margin-bottom:2rem}
+        .section h3{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border);font-size:1.1rem}
+        .section h3 .badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:bold}
+        .for-badge{background:#dcfce7;color:#166534}
+        .against-badge{background:#fee2e2;color:#991b1b}
+        .opinion-badge{background:#dbeafe;color:#1e40af}
+        .idea-item{background:var(--bg);border-radius:.75rem;padding:1rem;margin-bottom:.75rem;transition:background .2s}
+        .idea-item:hover{background:var(--border)}
+        .idea-item .zh{font-weight:500;margin-bottom:.25rem;font-size:.95rem}
+        .idea-item .en{color:var(--text-light);font-style:italic;font-size:.9rem}
+        .idea-item .keywords{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+        .keyword{background:#fff;padding:.15rem .5rem;border-radius:.25rem;font-size:.75rem;color:var(--primary);border:1px solid #c7d2fe}
+        .opinion-box{background:#eff6ff;border-left:4px solid var(--primary);padding:1rem 1.25rem;border-radius:0 .75rem .75rem 0;line-height:1.7}
+        .flashcard-container{max-width:650px;margin:0 auto}
+        .flashcard-info{text-align:center;margin-bottom:1rem;color:var(--text-light);font-size:.9rem}
+        .flashcard{perspective:1000px;height:320px;margin-bottom:1.5rem}
+        .flashcard-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d;cursor:pointer}
+        .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+        .flashcard-front,.flashcard-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+        .flashcard-front{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+        .flashcard-back{background:#fff;transform:rotateY(180deg);border:2px solid var(--primary)}
+        .flashcard-front .label{font-size:.85rem;opacity:.8;margin-bottom:1rem;text-transform:uppercase;letter-spacing:1px}
+        .flashcard-front .content{font-size:1.4rem;line-height:1.6;font-weight:500}
+        .flashcard-back .label{font-size:.85rem;color:var(--text-light);margin-bottom:1rem;text-transform:uppercase;letter-spacing:1px}
+        .flashcard-back .content{font-size:1.15rem;line-height:1.7;color:var(--text)}
+        .card-controls{display:flex;justify-content:center;gap:1rem;margin-bottom:1rem}
+        .ctrl-btn{padding:.75rem 2rem;border:none;border-radius:.5rem;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:500}
+        .ctrl-btn.know{background:var(--success);color:#fff}
+        .ctrl-btn.dont-know{background:var(--danger);color:#fff}
+        .ctrl-btn:hover{transform:scale(1.05);opacity:.9}
+        .card-nav{display:flex;justify-content:center;gap:1rem}
+        .card-nav button{padding:.5rem 1rem;border:1px solid var(--border);border-radius:.5rem;background:#fff;cursor:pointer;font-size:.85rem}
+        .card-nav button:hover{background:var(--bg)}
+        .practice-container{max-width:800px;margin:0 auto}
+        .practice-prompt{background:#fff;border-radius:1rem;padding:2rem;margin-bottom:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .practice-prompt h3{color:var(--primary);margin-bottom:1rem}
+        .practice-prompt .viewpoint{font-size:1.15rem;padding:1rem;background:var(--bg);border-radius:.5rem;margin-bottom:1rem;font-weight:500}
+        .practice-textarea{width:100%;min-height:200px;padding:1rem;border:2px solid var(--border);border-radius:.75rem;font-size:1rem;line-height:1.6;resize:vertical;transition:border-color .2s;font-family:inherit}
+        .practice-textarea:focus{outline:none;border-color:var(--primary)}
+        .hint-box{background:#fef3c7;border-left:4px solid var(--warning);padding:1rem;border-radius:0 .5rem .5rem 0;margin-top:1rem;font-size:.9rem}
+        .hint-box strong{color:#92400e}
+        .logic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+        .logic-card{background:#fff;border-radius:.75rem;padding:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .logic-card h4{color:var(--primary);margin-bottom:.5rem;font-size:1rem}
+        .logic-card .en{color:var(--text-light);font-style:italic;font-size:.85rem;margin-bottom:.75rem}
+        .logic-card .apply-to{display:flex;flex-wrap:wrap;gap:.5rem}
+        .apply-tag{background:var(--bg);padding:.25rem .5rem;border-radius:.25rem;font-size:.75rem;color:var(--text)}
+        .filter-bar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+        .filter-btn{padding:.4rem .8rem;border:1px solid var(--border);border-radius:.5rem;background:#fff;cursor:pointer;font-size:.8rem;transition:all .2s}
+        .filter-btn:hover,.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+        .topic-select{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+        .topic-select select{padding:.5rem 1rem;border:1px solid var(--border);border-radius:.5rem;font-size:.9rem;background:#fff}
+        @media(max-width:768px){.header h1{font-size:1.4rem}.nav-btn{padding:.5rem .8rem;font-size:.8rem}.grid{grid-template-columns:1fr}.flashcard{height:280px}.flashcard-front .content{font-size:1.2rem}.flashcard-back .content{font-size:1rem}}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>IELTS Simon Ideas Practice</h1>
+        <p>8 big categories | 24 topics | spaced repetition</p>
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn active" data-view="home">Home</button>
+        <button class="nav-btn" data-view="categories">Categories</button>
+        <button class="nav-btn" data-view="topics">Topics</button>
+        <button class="nav-btn" data-view="review">Flashcards</button>
+        <button class="nav-btn" data-view="practice">Practice</button>
+        <button class="nav-btn" data-view="logic">Logic</button>
+    </nav>
+
+    <main class="main">
+        <div class="stats-bar">
+            <div class="stat-card"><div class="number" id="s-topics">0/24</div><div class="label">Topics</div></div>
+            <div class="stat-card"><div class="number" id="s-due">0</div><div class="label">Due</div></div>
+            <div class="stat-card"><div class="number" id="s-mastered">0</div><div class="label">Mastered</div></div>
+            <div class="stat-card"><div class="number" id="s-accuracy">0%</div><div class="label">Mastery</div></div>
+        </div>
+
+        <!-- HOME -->
+        <div class="view active" id="home-view">
+            <div class="grid" id="home-grid"></div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="view" id="categories-view">
+            <div class="grid" id="cat-grid"></div>
+        </div>
+
+        <!-- CATEGORY DETAIL -->
+        <div class="view" id="cat-detail-view">
+            <div id="cat-detail"></div>
+        </div>
+
+        <!-- TOPIC DETAIL -->
+        <div class="view" id="topic-detail-view">
+            <div id="topic-detail"></div>
+        </div>
+
+        <!-- ALL TOPICS -->
+        <div class="view" id="topics-view">
+            <div class="grid" id="all-topics-grid"></div>
+        </div>
+
+        <!-- REVIEW -->
+        <div class="view" id="review-view">
+            <div class="topic-select">
+                <select id="review-cat-select" onchange="filterReviewCards()">
+                    <option value="all">All Categories</option>
+                </select>
+                <select id="review-topic-select" onchange="filterReviewCards()">
+                    <option value="all">All Topics</option>
+                </select>
+            </div>
+            <div class="flashcard-container">
+                <div class="flashcard-info" id="card-info">Card 1 / 1</div>
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <div class="label">Chinese Prompt</div>
+                            <div class="content" id="card-front">Loading...</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="label">English Answer</div>
+                            <div class="content" id="card-back">Click to flip</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-controls">
+                    <button class="ctrl-btn dont-know" onclick="nextCard(false)">Forgot</button>
+                    <button class="ctrl-btn know" onclick="nextCard(true)">Got it!</button>
+                </div>
+                <div class="card-nav">
+                    <button onclick="prevCard()">Previous</button>
+                    <button onclick="shuffleCards()">Shuffle</button>
+                </div>
+                <p style="text-align:center;margin-top:1rem;color:var(--text-light);font-size:.85rem">Read Chinese -> Say English -> Click to flip & check</p>
+            </div>
+        </div>
+
+        <!-- PRACTICE -->
+        <div class="view" id="practice-view">
+            <div class="practice-container">
+                <div class="topic-select">
+                    <select id="practice-cat-select" onchange="filterPracticeTopics()">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <select id="practice-topic-select">
+                        <option value="all">All Topics</option>
+                    </select>
+                </div>
+                <div class="practice-prompt">
+                    <h3>Expand this idea into a paragraph</h3>
+                    <p>Topic: <strong id="p-topic">-</strong></p>
+                    <p style="color:var(--text-light);font-size:.85rem;margin-bottom:.5rem" id="p-side">-</p>
+                    <div class="viewpoint" id="p-viewpoint">-</div>
+                    <p style="font-size:.9rem;margin-bottom:.5rem">Write a paragraph with:</p>
+                    <ul style="margin:0 0 .5rem 1.5rem;font-size:.9rem">
+                        <li><b>Topic sentence</b> - state the viewpoint</li>
+                        <li><b>because...</b> - explain the reason</li>
+                        <li><b>As a result...</b> - show the result</li>
+                        <li><b>For example...</b> - give an example</li>
+                    </ul>
+                </div>
+                <textarea class="practice-textarea" id="p-input" placeholder="Write your paragraph here..."></textarea>
+                <div class="hint-box"><strong>Tip:</strong> Don't memorize word-for-word. Focus on the logic chain. Use your own words!</div>
+                <div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap">
+                    <button class="nav-btn" onclick="newPractice()">New idea</button>
+                    <button class="nav-btn" onclick="toggleRef()">Show reference</button>
+                </div>
+                <div id="p-ref" style="display:none;margin-top:1rem"></div>
+            </div>
+        </div>
+
+        <!-- LOGIC -->
+        <div class="view" id="logic-view">
+            <div class="logic-grid" id="logic-grid"></div>
+        </div>
+    </main>
+
+    <script>
+    const DATA = {"categories": {"education": {"name": "教育成长", "en": "Education & Growth", "icon": "📖", "priority": 1, "topic_ids": [5, 7, 8]}, "technology": {"name": "科技发展", "en": "Technology & Science", "icon": "💻", "priority": 2, "topic_ids": [19, 9]}, "government": {"name": "政府治理", "en": "Government & Society", "icon": "🏛️", "priority": 3, "topic_ids": [4, 11, 12]}, "environment": {"name": "环境资源", "en": "Environment & Resources", "icon": "🌍", "priority": 4, "topic_ids": [6, 23, 22]}, "economy": {"name": "经济就业", "en": "Economy & Work", "icon": "💼", "priority": 5, "topic_ids": [1, 24, 16]}, "urban": {"name": "城市社会", "en": "Urban & Society", "icon": "🏙️", "priority": 6, "topic_ids": [3, 14, 10]}, "health": {"name": "健康生活", "en": "Health & Life", "icon": "❤️", "priority": 7, "topic_ids": [13, 18, 17]}, "culture": {"name": "文化交流", "en": "Culture & Exchange", "icon": "🌐", "priority": 8, "topic_ids": [20, 15, 21, 2]}}, "topics": {"1": {"id": 1, "name": "Advertising", "name_zh": "广告", "category": "economy", "subtopics": [{"zh": "广告的好处", "en": "Positives of Advertising"}, {"zh": "广告的坏处", "en": "Negatives of Advertising"}, {"zh": "对广告的看法", "en": "Opinions about Advertising"}], "ideas": {"for": [{"zh": "广告通知我们有哪些选择", "en": "Advertisements inform us about the choices we have", "key_words": ["inform", "choices"]}, {"zh": "广告行业创造大量就业", "en": "Advertising is a creative industry that employs many people", "key_words": ["industry", "employs"]}, {"zh": "没有广告选择会更少、失业更高", "en": "Without advertising we would have less choice and higher unemployment", "key_words": ["choice", "unemployment"]}], "against": [{"zh": "广告操纵消费者，推销品牌形象", "en": "Advertising manipulates people and focuses on selling a brand image", "key_words": ["manipulates", "brand image"]}, {"zh": "广告者经常瞄准儿童市场", "en": "Advertisers often aim their marketing at children", "key_words": ["aim", "children"]}, {"zh": "儿童容易受广告影响，给父母施压", "en": "Children can easily be influenced by advertisements and put pressure on parents", "key_words": ["influenced", "pressure"]}], "opinion": "Advertising should be regulated. Advertising aimed at children should be controlled or even banned. However, advertising is necessary in free market economies because it creates demand for products."}, "cards": [{"zh_question": "广告有什么好处？", "en_answer": "Advertising informs consumers about choices, creates employment, and drives demand in free market economies."}, {"zh_question": "广告对儿童有什么负面影响？", "en_answer": "Children can be easily influenced by advertisements. They put pressure on parents to buy them things. Advertising aimed at children should be controlled or banned."}, {"zh_question": "广告应该被监管吗？", "en_answer": "Misleading advertisements should be regulated. Marketing aimed at children should be controlled. However, advertising is necessary in free market economies as it creates demand."}]}, "2": {"id": 2, "name": "Animal Rights", "name_zh": "动物权利", "category": "culture", "subtopics": [{"zh": "支持动物试验", "en": "Arguments for Animal testing"}, {"zh": "反对动物试验", "en": "Arguments against Animal Testing"}, {"zh": "支持/反对素食主义", "en": "Vegetarianism"}, {"zh": "动物园的利与弊", "en": "Zoos"}], "ideas": {"for": [{"zh": "动物被用于重要的医学研究", "en": "Animals are used in important scientific research", "key_words": ["scientific research"]}, {"zh": "动物试验帮助推进医学知识", "en": "Animal testing helps to advance medical and scientific knowledge", "key_words": ["advance", "medical"]}], "against": [{"zh": "研究的好处不能为造成的痛苦辩护", "en": "The benefits of research do not justify the suffering caused", "key_words": ["justify", "suffering"]}, {"zh": "有替代的科研方法", "en": "There are alternative methods of research", "key_words": ["alternative", "methods"]}], "opinion": "Animal testing for cosmetics should be banned. Medical research should seek alternatives. We should respect animal life while acknowledging some scientific necessity."}, "cards": [{"zh_question": "为什么要支持动物试验？", "en_answer": "Animals are used in important scientific research. Animal testing helps to advance medical and scientific knowledge. Many medical discoveries involved experimentation on animals."}, {"zh_question": "为什么反对动物试验？", "en_answer": "The benefits of research do not justify the suffering caused. There are alternative methods of research. Animals' lives should be respected."}, {"zh_question": "动物园有必要存在吗？", "en_answer": "Zoos play an important role in wildlife conservation and protect endangered species. However, animals are kept in artificial environments with limited space. The best way to save species is by protecting natural habitats."}]}, "3": {"id": 3, "name": "Cities", "name_zh": "城市", "category": "urban", "subtopics": [{"zh": "城市化原因", "en": "Reasons for Urbanization"}, {"zh": "城市生活的弊端", "en": "Negatives of City Life"}, {"zh": "步行区域", "en": "Pedestrian Areas"}], "ideas": {"for": [{"zh": "城市提供更多就业机会和更高生活水平", "en": "Cities offer greater employment possibilities and a higher standard of living", "key_words": ["employment", "standard of living"]}, {"zh": "步行区改善城市环境", "en": "Pedestrian zones in city centres can improve the local environment", "key_words": ["pedestrian", "environment"]}], "against": [{"zh": "城市生活成本高、住房贵", "en": "The cost of living is higher than in rural areas and housing is usually much more expensive", "key_words": ["cost of living", "expensive"]}, {"zh": "城市有交通拥堵、犯罪等问题，缺乏社区感", "en": "There are problems like traffic congestion and crime. Cities lack a sense of community", "key_words": ["congestion", "crime", "community"]}], "opinion": "Urbanization is inevitable but cities need better planning. Banning cars and building pedestrian areas and bicycle lanes can improve urban life."}, "cards": [{"zh_question": "人们为什么迁往城市？", "en_answer": "People move to cities in search of job opportunities. Cities offer greater employment possibilities and a higher standard of living. Traditional activities like farming need fewer workers."}, {"zh_question": "城市生活有什么缺点？", "en_answer": "The cost of living is higher, housing is expensive, homelessness and poverty are common. There are problems like traffic congestion and crime. Cities lack a sense of community."}, {"zh_question": "如何解决城市问题？", "en_answer": "Pedestrian zones can improve the local environment. Banning cars encourages walking and cycling. Many European cities have built bicycle lanes. People who walk or cycle regularly are generally healthier."}]}, "4": {"id": 4, "name": "Crime", "name_zh": "犯罪", "category": "government", "subtopics": [{"zh": "警察与犯罪预防", "en": "Police and Crime Prevention"}, {"zh": "惩罚与监狱", "en": "Punishments/Prisons"}, {"zh": "改造", "en": "Rehabilitation"}, {"zh": "死刑", "en": "Capital punishment"}, {"zh": "社区服务", "en": "Community service"}, {"zh": "媒体与犯罪", "en": "Crime in the Media"}], "ideas": {"for": [{"zh": "警察应参与教育和预防，与学校保持联系", "en": "Police should be involved with education and prevention, in close contact with schools", "key_words": ["education", "prevention"]}, {"zh": "监狱确保其他市民的安全", "en": "Some criminals pose a threat to society and are put in prison to ensure the safety of other citizens", "key_words": ["safety", "prison"]}], "against": [{"zh": "罪犯关在一起会互相影响，出狱后再犯", "en": "Criminals are put together, make friends with other offenders, and many re-offend when released", "key_words": ["re-offend", "together"]}, {"zh": "犯罪记录使找工作更困难", "en": "A criminal record makes finding a job more difficult", "key_words": ["criminal record", "difficult"]}], "opinion": "Punishment should be combined with rehabilitation. Prisons should provide education and vocational training. Community service could be a solution to prison overcrowding."}, "cards": [{"zh_question": "如何预防犯罪？", "en_answer": "Police should be involved with education and prevention. They should be in close contact with schools and focus on young people who have dropped out, as they may become involved with gangs."}, {"zh_question": "监狱有什么弊端？", "en_answer": "Criminals are put together and make friends with other offenders. Many prisoners re-offend when released. A criminal record makes finding a job more difficult."}, {"zh_question": "你支持死刑吗？", "en_answer": "Capital punishment is not acceptable. Innocent people could be wrongly convicted and executed. Crime rates are not necessarily reduced. We have no right to take another human life."}, {"zh_question": "社区服务能替代监狱吗？", "en_answer": "Community service is a way to reform offenders. It could solve prison overcrowding, avoids costs, and offenders repay their community. However, some believe criminals should be locked up away from victims."}]}, "5": {"id": 5, "name": "Education", "name_zh": "教育", "category": "education", "subtopics": [{"zh": "教育的好处", "en": "Benefits of education"}, {"zh": "出国留学的利弊", "en": "Studying Abroad"}, {"zh": "教育中的科技", "en": "Technology in Education"}, {"zh": "发展中国家的教育", "en": "Education in Developing Countries"}, {"zh": "高等教育", "en": "Higher Education"}, {"zh": "在家上学", "en": "Home-schooling"}, {"zh": "学校不良行为", "en": "Bad behavior in schools"}, {"zh": "体罚/男女分校/分流", "en": "Corporal Punishment / Single-sex / Streaming"}], "ideas": {"for": [{"zh": "教育给人知识和技能，帮助找到工作", "en": "Education gives people knowledge and skills. People with qualifications are more likely to find work and earn higher salaries", "key_words": ["knowledge", "skills", "qualifications"]}, {"zh": "学校教育道德价值观，为社会培养成员", "en": "Schools aim to teach moral values such as tolerance and sharing. Schools prepare children to be members of society", "key_words": ["moral values", "society"]}], "against": [{"zh": "人们过度依赖电脑，基本技能退步", "en": "People rely too much on computers. Young learners do not become proficient in basic skills like handwriting", "key_words": ["rely", "computers", "basic skills"]}, {"zh": "技术无法替代真正的老师", "en": "Technology is no substitute for a real teacher. Learners need a structured course and experienced teachers", "key_words": ["substitute", "teacher"]}], "opinion": "Institutions should supplement traditional teaching with technology. Technology is part of everyday life and can enhance lessons. But students must still learn to write by hand and use traditional sources like books."}, "cards": [{"zh_question": "教育有什么好处？", "en_answer": "Education gives people knowledge and skills. People with qualifications are more likely to find work and earn higher salaries. They can contribute positively to society."}, {"zh_question": "教育中用科技有什么好处？", "en_answer": "Technology is a powerful tool to engage students. It makes lessons more interesting. Students can do research using online resources and learn skills useful for future jobs."}, {"zh_question": "教育中用科技有什么坏处？", "en_answer": "People rely too much on computers. Young learners may not become proficient in basic skills like handwriting. Technology is no substitute for a real teacher."}, {"zh_question": "出国留学有什么好处？", "en_answer": "Foreign institutions may offer better courses. Living abroad broadens horizons, exposes students to different cultures, and helps them learn a foreign language. They become more independent."}, {"zh_question": "学校不良行为的原因和解决方法？", "en_answer": "Causes: lack of discipline, large classes, unstable family background, lenient parents. Solutions: clear code of conduct, positive atmosphere, teachers should have power to punish, schools need to work with parents."}]}, "6": {"id": 6, "name": "Environment", "name_zh": "环境", "category": "environment", "subtopics": [{"zh": "全球变暖", "en": "Global warming"}, {"zh": "人类对环境的影响", "en": "Impacts of humans on the environment"}, {"zh": "环境问题的解决方案", "en": "Solutions to environment problems"}, {"zh": "废物/垃圾", "en": "Waste/rubbish"}, {"zh": "核能", "en": "Nuclear Power"}], "ideas": {"for": [{"zh": "政府应立法限制排放，投资可再生能源", "en": "Governments could introduce laws to limit emissions and invest in renewable energy from solar, wind or water power", "key_words": ["laws", "renewable energy"]}, {"zh": "个人也应该尽量环保", "en": "Individuals should try to be greener: take fewer flights, use public transport, choose products with less packaging, recycle", "key_words": ["greener", "recycle"]}], "against": [{"zh": "化石燃料正在耗尽，自然资源受到压力", "en": "Fossil fuels like oil and gas are running out. The increasing world population is putting pressure on natural resources", "key_words": ["fossil fuels", "running out"]}, {"zh": "我们正摧毁野生动物栖息地，砍伐大面积雨林", "en": "We are destroying wildlife habitats and have cut down enormous areas of rainforest", "key_words": ["destroying", "habitats", "rainforest"]}], "opinion": "Sustainable development should balance economic growth with environmental protection. Governments should introduce green taxes and promote recycling. Individuals should also take responsibility."}, "cards": [{"zh_question": "全球变暖的原因是什么？", "en_answer": "Human activity is a major factor. Factories and vehicles produce emissions. Many developing countries are becoming industrialized. The number of cars is growing and cheap air travel allows more people to fly."}, {"zh_question": "全球变暖有什么影响？", "en_answer": "Rising temperatures will cause melting of the polar ice caps. Sea levels will rise. We can expect more extreme weather conditions. Flooding and droughts may become more common."}, {"zh_question": "如何解决环境问题？", "en_answer": "Governments should introduce laws to limit emissions, invest in renewable energy, impose green taxes, and promote recycling. Individuals should take fewer flights, use public transport, and recycle."}, {"zh_question": "核能有什么优缺点？", "en_answer": "Positives: sustainable energy source, cleaner than fossil fuels, can reduce carbon emissions. Negatives: safety concerns, nuclear waste disposal is a significant problem, terrorists could steal radioactive materials."}]}, "7": {"id": 7, "name": "Family", "name_zh": "家庭", "category": "education", "subtopics": [{"zh": "家庭规模", "en": "Family size"}, {"zh": "双职工家庭", "en": "Working parents"}, {"zh": "对孩子的负面影响", "en": "Negative effects on Children"}, {"zh": "离婚", "en": "Divorce"}, {"zh": "赡养老人", "en": "Care for Old people"}], "ideas": {"for": [{"zh": "家庭传统上负责照顾老人和孩子", "en": "Caring for elderly people was traditionally the responsibility of families. Adults had to look after their elderly parents", "key_words": ["responsibility", "look after"]}, {"zh": "家庭成员提供最亲密的支持", "en": "Families provide emotional support and positive role models for children", "key_words": ["emotional support", "role models"]}], "against": [{"zh": "双职工家庭陪伴孩子时间减少", "en": "Both parents often work full time. Children may be left alone or with nannies. Busy parents have less contact with their children", "key_words": ["work full time", "less contact"]}, {"zh": "离婚率上升对儿童产生负面影响", "en": "Divorce can have a negative effect on children. Children from single-parent families are more likely to get lower grades", "key_words": ["divorce", "negative effect"]}], "opinion": "The best form of care depends on the family situation. We all have responsibility towards elderly people. Governments should invest in facilities and training for care workers."}, "cards": [{"zh_question": "双职工家庭对孩子有什么影响？", "en_answer": "Children may be left alone or with nannies. Parents spend less time with children. Friends, television and the Internet become the main influence. Teenagers may be affected by peer pressure."}, {"zh_question": "离婚有什么社会影响？", "en_answer": "Divorce can be extremely stressful. Lone parents may face financial difficulties. Divorce can have negative effects on children, who are more likely to get lower grades or drop out of school."}, {"zh_question": "老人应该由家庭照顾还是养老院照顾？", "en_answer": "It depends on whether family members have the time and resources. Care homes provide a professional service with trained nurses. We all have responsibility towards the older people in our society."}]}, "8": {"id": 8, "name": "Gender", "name_zh": "性别", "category": "education", "subtopics": [{"zh": "性别与教育", "en": "Gender and education"}, {"zh": "性别与工作", "en": "Gender and work"}, {"zh": "家庭中的男女角色", "en": "Women's and Men's roles in the Family"}], "ideas": {"for": [{"zh": "男女应享有相同的教育和工作机会", "en": "Men and women should have access to the same educational and professional opportunities", "key_words": ["same opportunities"]}, {"zh": "应按能力而非性别录用", "en": "They should be employed according to their abilities, qualifications and experience", "key_words": ["abilities", "qualifications"]}], "against": [{"zh": "传统上女性被限制在某些角色中", "en": "Traditionally women have been restricted to certain roles, often employed as secretaries or receptionists", "key_words": ["restricted", "roles"]}, {"zh": "性别不平等仍然存在", "en": "Women often earn less than men for the same work", "key_words": ["earn less", "inequality"]}], "opinion": "Gender should be irrelevant in education and work. Both parents should share parenting and domestic responsibilities. Traditional gender roles are gradually changing."}, "cards": [{"zh_question": "男女应该平等吗？", "en_answer": "Men and women should have access to the same educational and professional opportunities. They should earn equal salaries. They should be employed according to their abilities, not their gender."}, {"zh_question": "家庭中的性别角色应该怎么分工？", "en_answer": "Both parents should share responsibilities. Many fathers and mothers contribute equally to childcare, cooking and cleaning. Paternity leave and househusbands are becoming more common. Families can divide roles in the most convenient way."}]}, "9": {"id": 9, "name": "Genetic Engineering", "name_zh": "基因工程", "category": "technology", "subtopics": [{"zh": "基因工程的好处", "en": "Positives of genetic engineering"}, {"zh": "基因工程的坏处", "en": "Negatives of genetic engineering"}, {"zh": "转基因食品", "en": "GM Foods"}], "ideas": {"for": [{"zh": "可以培育抗虫害的农作物", "en": "It is used to produce crops that are more resistant to insects and diseases", "key_words": ["resistant", "crops"]}, {"zh": "可能治愈遗传疾病", "en": "Scientists may use genetic engineering to cure diseases. Inherited illnesses would no longer exist", "key_words": ["cure", "diseases"]}], "against": [{"zh": "存在伦理问题", "en": "There are ethical concerns about human genetic engineering. It would be unacceptable in most religions", "key_words": ["ethical", "religions"]}, {"zh": "转基因作物可能破坏生态系统", "en": "GM crops might change whole ecosystems. Food chains could be broken", "key_words": ["ecosystems", "food chains"]}], "opinion": "Genetic engineering for medical purposes should be carefully regulated. GM foods need thorough safety testing. The potential benefits must be weighed against ethical and environmental risks."}, "cards": [{"zh_question": "基因工程有什么好处？", "en_answer": "It produces crops resistant to insects and diseases. Some GM crops grow more quickly. It may become possible to cure inherited diseases and clone human organs."}, {"zh_question": "基因工程有什么风险？", "en_answer": "There are ethical concerns about human genetic engineering. GM crops might change whole ecosystems. Food chains could be broken if crops are resistant to predators."}, {"zh_question": "转基因食品安全吗？", "en_answer": "GM crops grow bigger and faster, which could help food production in developing countries. However, there may be risks involved. Organic foods are produced without chemicals or genetic modification."}]}, "10": {"id": 10, "name": "Global Issues", "name_zh": "全球议题", "category": "urban", "subtopics": [{"zh": "发展中国家的问题", "en": "Problems in developing countries"}, {"zh": "如何帮助发展中国家", "en": "How to help developing countries"}, {"zh": "移民", "en": "Immigration"}, {"zh": "全球化", "en": "Globalization"}], "ideas": {"for": [{"zh": "移民带来经济利益和文化多样性", "en": "Immigration can be economically positive. Immigrants have skills that are needed and contribute to the economy. It creates cultural diversity", "key_words": ["economy", "diversity"]}, {"zh": "全球化促进自由贸易和就业", "en": "Globalization creates free trade between countries, strengthens political relationships, and creates opportunities for employment", "key_words": ["free trade", "employment"]}], "against": [{"zh": "移民可能导致本地人失业", "en": "Some believe immigrants take jobs that should go to local people. Unemployment rates could rise if there are too many immigrants", "key_words": ["take jobs", "unemployment"]}, {"zh": "全球化导致工作不稳定和环境污染", "en": "Companies move to countries where labour is cheap, creating redundancies. Global trade creates more waste and pollution", "key_words": ["cheap labour", "pollution"]}], "opinion": "Immigration can help the economy and create multi-cultural societies, but it needs to be controlled. There should be global regulations for salaries and working conditions."}, "cards": [{"zh_question": "移民有什么好处？", "en_answer": "Immigrants have skills needed in the country. They contribute to the economy. Immigration creates cultural diversity and helps people become more open-minded and tolerant."}, {"zh_question": "移民有什么负面影响？", "en_answer": "Some believe immigrants take jobs from local people. Some immigrant workers accept lower pay. Companies might exploit immigrant workers."}, {"zh_question": "全球化有什么优缺点？", "en_answer": "Positives: free trade, employment opportunities, investment in less developed countries. Negatives: companies exploit cheap labour, job losses, more waste and pollution."}]}, "11": {"id": 11, "name": "Government & Society", "name_zh": "政府与社会", "category": "government", "subtopics": [{"zh": "政府能做什么", "en": "What governments can do"}, {"zh": "公共服务", "en": "Public services"}, {"zh": "审查制度", "en": "Censorship"}, {"zh": "公共场所监控", "en": "Video cameras in public places"}, {"zh": "智能卡", "en": "Smart cards"}, {"zh": "残疾人", "en": "People with Disabilities"}], "ideas": {"for": [{"zh": "政府提供医疗教育等公共服务", "en": "Governments provide public services like healthcare and education. They support people living in poverty", "key_words": ["public services", "healthcare"]}, {"zh": "监控可以保护市民、震慑犯罪", "en": "Video cameras are supposed to protect us and deter criminals. Smart cards could help reduce crime", "key_words": ["protect", "deter"]}], "against": [{"zh": "监控侵犯隐私", "en": "Many people think surveillance violates our privacy. The authorities could build databases with our pictures and identities", "key_words": ["privacy", "surveillance"]}, {"zh": "政府不可能控制一切", "en": "It is impossible for governments to control everything we see", "key_words": ["impossible", "control"]}], "opinion": "Censorship is necessary to a certain extent to protect children. But governments cannot control everything. Essential services like healthcare and education should be provided by the government."}, "cards": [{"zh_question": "政府应该为人民做什么？", "en_answer": "Governments provide public services like healthcare and education. They raise money by taxation, introduce laws, create jobs, and are responsible for security and well-being of citizens."}, {"zh_question": "公共场所应该安装监控吗？", "en_answer": "CCTV can protect us and deter criminals. However, many people think this surveillance violates our privacy. We should not be treated like criminals."}, {"zh_question": "媒体需要审查吗？", "en_answer": "To a certain extent, censorship is necessary. We should protect children from violent images. The Internet needs to be controlled. But it is impossible for governments to control everything."}]}, "12": {"id": 12, "name": "Guns & Weapons", "name_zh": "枪支武器", "category": "government", "subtopics": [{"zh": "枪支应合法/非法", "en": "Guns legal/illegal"}, {"zh": "警察应否佩枪", "en": "Police and guns"}, {"zh": "军火贸易", "en": "Arms Trade"}, {"zh": "核武器", "en": "Nuclear weapons"}, {"zh": "武装力量", "en": "Armed Forces"}], "ideas": {"for": [{"zh": "个人有权自卫", "en": "Individuals have the right to protect themselves. People can use guns in self defence", "key_words": ["right", "self defence"]}, {"zh": "武装力量提供安全保障", "en": "Armed forces provide security and protection. They deter military attack", "key_words": ["security", "deter"]}], "against": [{"zh": "枪支增加暴力犯罪和意外事故", "en": "The number of violent crimes increases when guns are available. There is a risk of accidents", "key_words": ["violent crimes", "accidents"]}, {"zh": "核武器可以摧毁整个城市", "en": "Nuclear weapons are capable of destroying whole cities. They should be prohibited", "key_words": ["destroying", "prohibited"]}], "opinion": "Gun ownership should be illegal for civilians. Nuclear weapons should be prohibited. Governments should limit arms trade. Armed forces are necessary but funding should be reasonable."}, "cards": [{"zh_question": "普通人应该允许拥有枪支吗？", "en_answer": "No. There is a risk of accidents. The number of violent crimes increases when guns are available. Suicide rates rise. Guns create violent societies with high murder rates."}, {"zh_question": "警察应该佩枪吗？", "en_answer": "Many criminals use weapons, so police may need guns for self defence and to protect the public. However, there is a risk of accidents and mistakes. Only special police units should use guns."}, {"zh_question": "核武器应该被禁止吗？", "en_answer": "Yes. Nuclear weapons can destroy whole cities. There is a danger of them being obtained by terrorists. Nuclear weapons cannot be used against terrorist organizations."}]}, "13": {"id": 13, "name": "Health", "name_zh": "健康", "category": "health", "subtopics": [{"zh": "饮食", "en": "Diet"}, {"zh": "运动", "en": "Exercise"}, {"zh": "政府角色", "en": "Government's Role"}, {"zh": "公共医疗 vs 私人医疗", "en": "State vs Private Healthcare"}, {"zh": "替代医学", "en": "Alternative medicine"}, {"zh": "压力", "en": "Stress"}], "ideas": {"for": [{"zh": "政府应推广健康饮食和运动", "en": "Governments should promote a healthy diet and regular exercise. Food packaging must show nutritional content", "key_words": ["promote", "healthy diet"]}, {"zh": "好的医疗应该对所有人免费", "en": "Good healthcare should be available to everyone for free. State healthcare is paid by the government using money from taxes", "key_words": ["free", "healthcare"]}], "against": [{"zh": "不健康饮食导致肥胖、糖尿病、心脏病增加", "en": "An unhealthy diet can cause obesity, diabetes and heart disease. Many people rely on fast food with too much fat, salt and sugar", "key_words": ["obesity", "diabetes"]}, {"zh": "现代生活方式越来越有压力", "en": "Modern lifestyles are increasingly stressful. People work long hours with strict deadlines and have less time to relax", "key_words": ["stressful", "long hours"]}], "opinion": "Both government action and personal responsibility are needed. Governments should invest in public health, ban junk food from schools, and promote exercise. Individuals should eat balanced diets and exercise regularly."}, "cards": [{"zh_question": "政府应该在健康方面做什么？", "en_answer": "Governments should promote healthy diet and exercise. More time for sports in schools. Junk food should be banned from school menus. Food packaging must show nutritional content."}, {"zh_question": "为什么现代人不健康？", "en_answer": "Many people rely on fast food with too much fat, salt and sugar. Most people lead sedentary lifestyles, walk less, and do desk jobs. Modern lifestyles are increasingly stressful."}, {"zh_question": "公共医疗和私人医疗哪个好？", "en_answer": "State healthcare: available to everyone for free, everyone has equal access. Private healthcare: shorter waiting lists, faster treatment, more personal service. Both have advantages."}]}, "14": {"id": 14, "name": "Housing & Architecture", "name_zh": "住房与建筑", "category": "urban", "subtopics": [{"zh": "政府住房", "en": "State/council housing"}, {"zh": "老建筑", "en": "Old Buildings"}, {"zh": "现代/绿色建筑", "en": "Modern/green buildings"}], "ideas": {"for": [{"zh": "政府应为买不起房的人提供住房", "en": "The government provides state housing to help people who cannot afford to buy their own house", "key_words": ["state housing", "afford"]}, {"zh": "历史建筑是国家遗产的一部分", "en": "Historic buildings are part of a country's heritage. They give character to cities and attract tourists", "key_words": ["heritage", "attract tourists"]}], "against": [{"zh": "政府住房可能造成依赖", "en": "State housing creates dependence on the government. People have no incentive to earn money and buy their own home", "key_words": ["dependence", "incentive"]}, {"zh": "政府住房通常质量差", "en": "Council properties are often made with cheap, poor-quality materials", "key_words": ["poor-quality"]}], "opinion": "Historic buildings should be protected and maintained. New buildings should complement them. Modern buildings should be designed to be environmentally friendly and energy-efficient."}, "cards": [{"zh_question": "政府应该提供免费住房吗？", "en_answer": "State housing helps people who cannot afford to buy. However, it may create dependence on the government and people may have no incentive to earn money."}, {"zh_question": "老建筑应该被保护吗？", "en_answer": "Historic buildings are part of a country's heritage. They give character to cities and attract tourists. Governments should spend money on looking after them. New buildings should complement them."}, {"zh_question": "现代建筑应该怎么设计？", "en_answer": "Modern buildings should be environmentally friendly. They should use less energy and produce less waste. Solar and wind power can generate electricity. Rainwater can be recycled."}]}, "15": {"id": 15, "name": "Language", "name_zh": "语言", "category": "culture", "subtopics": [{"zh": "英语作为国际语言的好处", "en": "English as an international language"}, {"zh": "英语作为国际语言的坏处", "en": "Negatives of English as an International Language"}], "ideas": {"for": [{"zh": "英语是科技、科学和国际商务的主导语言", "en": "English is the dominant language of technology, science and international business", "key_words": ["dominant", "international business"]}, {"zh": "会说英语是现代社会必备技能", "en": "The ability to speak English is a necessary skill in the modern world", "key_words": ["necessary skill"]}], "against": [{"zh": "一种语言主导可能导致其他语言消失", "en": "If one language is dominant, other languages may disappear", "key_words": ["disappear"]}, {"zh": "主导语言带来其文化，可能损害其他文化", "en": "The dominant language brings its own culture. Other cultures may be damaged", "key_words": ["culture", "damaged"]}], "opinion": "English as a global language facilitates communication but we should protect linguistic diversity. A constructed global language like Esperanto could be an alternative."}, "cards": [{"zh_question": "英语作为国际语言有什么好处？", "en_answer": "English is the dominant language of technology, science and international business. International meetings are held in English. The ability to speak English is a necessary skill."}, {"zh_question": "英语全球化有什么坏处？", "en_answer": "If one language is dominant, other languages may disappear. The dominant language brings its own culture and other cultures may be damaged. A new global language could be invented as an alternative."}]}, "16": {"id": 16, "name": "Money & Consumerism", "name_zh": "金钱与消费", "category": "economy", "subtopics": [{"zh": "金钱与社会", "en": "Money and Society"}, {"zh": "消费主义的好处", "en": "Positives of Consumerism"}, {"zh": "消费主义的坏处", "en": "Negatives of Consumerism"}], "ideas": {"for": [{"zh": "消费主义创造就业，减少贫困", "en": "Consumerism creates employment and helps to reduce poverty. It encourages innovation and creativity", "key_words": ["employment", "poverty"]}, {"zh": "我们享有更高质量的生活", "en": "We live in a global economy and have a better quality of life", "key_words": ["quality of life"]}], "against": [{"zh": "消费社会制造更多废物，消耗更多资源", "en": "Consumerist societies create more waste, use more natural resources, and cause damage to the environment", "key_words": ["waste", "resources"]}, {"zh": "财富并不带来幸福，物质主义导致贪婪和犯罪", "en": "Wealth does not lead to happiness. Materialism causes greed and crime", "key_words": ["happiness", "greed"]}], "opinion": "We should return to traditional values like sharing. Consumerism brings economic benefits but we need to be mindful of environmental impact and true sources of happiness."}, "cards": [{"zh_question": "消费主义有什么好处？", "en_answer": "Consumerism creates employment, helps reduce poverty, encourages innovation. We live in a global economy with a better quality of life."}, {"zh_question": "消费主义有什么坏处？", "en_answer": "Consumerist societies create more waste and use more natural resources. They cause environmental damage. Wealth does not lead to happiness. Materialism causes greed and crime."}, {"zh_question": "金钱能带来幸福吗？", "en_answer": "Society has become increasingly materialistic. We connect wealth with happiness and success. But wealth does not lead to happiness. We should return to traditional values like sharing."}]}, "17": {"id": 17, "name": "Personality", "name_zh": "个性", "category": "health", "subtopics": [{"zh": "幸福", "en": "Happiness"}, {"zh": "成功", "en": "Success"}, {"zh": "先天 vs 后天", "en": "Nature or Nurture"}], "ideas": {"for": [{"zh": "幸福来自做有意义的事", "en": "In order to be truly happy it is necessary to live a good life. We need to feel that we are doing something useful", "key_words": ["useful", "truly happy"]}, {"zh": "成功是努力工作的结果", "en": "Success is the result of hard work. Success in any field requires long-term planning and effort", "key_words": ["hard work", "effort"]}], "against": [{"zh": "有些人认为成功由财富和地位定义", "en": "For others, success is defined by wealth or status. We often think of rich and famous people as successful", "key_words": ["wealth", "status"]}, {"zh": "有些人认为性格由基因决定", "en": "Some believe personalities are determined mainly by genetics. We inherit abilities and talents from parents", "key_words": ["genetics", "inherit"]}], "opinion": "Happiness means different things to different people. Success comes from hard work, not just talent. We can shape our own personalities - many successful people are self-made."}, "cards": [{"zh_question": "什么是真正的幸福？", "en_answer": "Happiness means different things to different people. To be truly happy, we need to feel we are doing something useful. Some find happiness in work, others in family, religion or a sense of purpose."}, {"zh_question": "成功来自天赋还是努力？", "en_answer": "Success is the result of hard work and long-term planning. Many successful people are self-made. We are not limited by genetic characteristics or upbringing. By working hard we can achieve any goal."}, {"zh_question": "性格是先天决定还是后天培养？", "en_answer": "Some believe personality is determined by genetics. Others think education and upbringing are more important. Many argue we control our own destinies and can shape our own personalities."}]}, "18": {"id": 18, "name": "Sport & Leisure", "name_zh": "体育与休闲", "category": "health", "subtopics": [{"zh": "反对职业/竞技体育", "en": "Against Professional/competitive sport"}, {"zh": "支持职业体育", "en": "Arguments for Professional sport"}, {"zh": "支持竞技体育", "en": "Arguments for Competitive sport"}, {"zh": "运动员高薪是否合理", "en": "Sports salaries"}, {"zh": "体育与政治", "en": "Sports and Politics"}], "ideas": {"for": [{"zh": "体育产业创造就业，运动员娱乐数百万人", "en": "Many people are employed in the sports industry. Sports stars entertain millions of people", "key_words": ["employed", "entertain"]}, {"zh": "竞争是人的天性，体育是安全的竞争形式", "en": "Competition is a natural instinct. Sports are a safe form of competition that pushes us to give our best", "key_words": ["competition", "safe"]}], "against": [{"zh": "体育变成了生意，运动员只关心金钱和名利", "en": "Sport has become a business. Many sports stars are only concerned about money and fame", "key_words": ["business", "money"]}, {"zh": "一些运动员为赢不择手段使用药物", "en": "Some athletes take drugs in order to win at any cost. They are not good role models for children", "key_words": ["drugs", "role models"]}], "opinion": "Professional sport salaries are fair because sports is a multi-million industry and stars have dedicated years of practice. But salaries should be reasonable. Sports should primarily be about health and enjoyment."}, "cards": [{"zh_question": "职业运动员应该拿高薪吗？", "en_answer": "It is fair that the best earn a lot. Sport is a multi-million industry with large audiences. Stars have dedicated hours of practice. But their careers may only last 10 years. Sports fans are willing to pay."}, {"zh_question": "竞技体育有什么好处？", "en_answer": "Competition is a natural instinct. Sports are a safe form of competition. It is healthy because it pushes us to give our best. Supporters feel a sense of belonging to a community."}, {"zh_question": "体育和政治应该分开吗？", "en_answer": "Governments are involved in hosting events like the Olympics. These events attract investment and create jobs. But sport and politics should ideally remain separate."}]}, "19": {"id": 19, "name": "TV, Internet & Phones", "name_zh": "电视网络手机", "category": "technology", "subtopics": [{"zh": "电视的利弊", "en": "Television"}, {"zh": "互联网的利弊", "en": "Internet"}, {"zh": "手机的利弊", "en": "Mobile Phones"}], "ideas": {"for": [{"zh": "电视是放松的好方式，有教育意义", "en": "Watching television is a good way to relax. Programmes can be informative and educational. News makes us aware of world events", "key_words": ["relax", "educational"]}, {"zh": "互联网提供即时信息，革新了通信", "en": "The Internet gives us instant access to information. It has revolutionized communication", "key_words": ["information", "communication"]}, {"zh": "手机让我们随时随地保持联系", "en": "Mobile phones have revolutionized communication. We can stay in touch wherever we are", "key_words": ["communication", "stay in touch"]}], "against": [{"zh": "电视上的暴力与犯罪率相关，儿童模仿", "en": "Violence on television is linked with crime. Children copy behavior they see. Watching TV is a waste of time", "key_words": ["violence", "copy"]}, {"zh": "互联网有不良内容，网络犯罪增加", "en": "Many websites contain offensive content. Criminals use the Internet to steal people's money", "key_words": ["offensive", "criminals"]}, {"zh": "手机在公共场所造成干扰，影响驾驶安全", "en": "Ringing phones cause disturbance. Using phones while driving reduces concentration. Waves could cause damage to brains", "key_words": ["disturbance", "driving"]}], "opinion": "The benefits of technology outweigh the drawbacks. Parents should control what children watch. We need to use these technologies with care."}, "cards": [{"zh_question": "电视有什么好处和坏处？", "en_answer": "Benefits: good way to relax, educational, news coverage. Negatives: violence linked to crime, children copy behavior, watching TV is a waste of time, can be addictive."}, {"zh_question": "互联网有什么好处和坏处？", "en_answer": "Benefits: instant access to information, online shopping, revolutionized communication. Negatives: offensive content, children may see inappropriate material, criminals steal money online."}, {"zh_question": "手机有什么好处和坏处？", "en_answer": "Benefits: stay in touch wherever we are, send messages, surf Internet, take photos. Negatives: cause disturbance in public, dangerous while driving, popular target for thieves."}]}, "20": {"id": 20, "name": "Tourism", "name_zh": "旅游", "category": "culture", "subtopics": [{"zh": "旅游的好处", "en": "Positives of Tourism"}, {"zh": "旅游的负面影响", "en": "Negative effects of tourism"}, {"zh": "旅游的未来", "en": "The future of tourism"}], "ideas": {"for": [{"zh": "旅游业创造就业，对一些经济至关重要", "en": "The tourist trade is vital for some economies. It creates employment in accommodation, transport and entertainment", "key_words": ["employment", "economies"]}, {"zh": "旅游开阔视野，体验不同文化", "en": "Travelling abroad opens our minds. Tourists can experience different cultures and learn languages", "key_words": ["opens minds", "cultures"]}], "against": [{"zh": "旅游破坏自然环境和野生动物栖息地", "en": "Tourism can have a negative effect on the natural environment. Building facilities can destroy wildlife habitats", "key_words": ["negative effect", "habitats"]}, {"zh": "旅游导致物价上涨，影响当地居民", "en": "A rise in the cost of living affects local people. The price of goods, services and housing may increase significantly", "key_words": ["cost of living", "local people"]}], "opinion": "Governments should introduce laws to protect natural environments and local cultures. Tourism should have a low impact on wildlife. Renewable resources should be used and waste recycled."}, "cards": [{"zh_question": "旅游有什么好处？", "en_answer": "Tourism creates employment in services. Some areas rely on tourism for income. It attracts investment, improves living standards. Travelling abroad opens our minds and we can learn languages."}, {"zh_question": "旅游有什么负面影响？", "en_answer": "Tourism can damage the natural environment and destroy wildlife habitats. Beautiful beaches are spoilt by hotels. It creates pollution, puts pressure on local resources, and raises living costs for locals."}, {"zh_question": "如何实现可持续旅游？", "en_answer": "Governments should introduce laws to protect environments and cultures. Tourism should have low impact on wildlife. Renewable resources should be used. Waste should be recycled. Local businesses should be supported."}]}, "21": {"id": 21, "name": "Traditional vs Modern", "name_zh": "传统与现代", "category": "culture", "subtopics": [{"zh": "传统技能的丧失", "en": "Losing traditional skills"}, {"zh": "例子", "en": "Examples"}, {"zh": "传统习俗", "en": "Traditional customs"}], "ideas": {"for": [{"zh": "工业化和全球贸易导致许多传统消失", "en": "Because of industrialization and global trade, many traditions have disappeared. Machinery has replaced skilled human labour", "key_words": ["industrialization", "disappeared"]}, {"zh": "传统习俗在婚礼和宗教节日中仍然重要", "en": "Traditional customs are still important during weddings and religious festivals", "key_words": ["customs", "festivals"]}], "against": [{"zh": "工厂产品更便宜，更多人能买到", "en": "Products are cheaper, which means that more people can buy them", "key_words": ["cheaper", "more people"]}, {"zh": "现代建筑比传统建筑更快建成", "en": "Modern buildings are built in weeks or months, while historic buildings took skilled craftsmen years", "key_words": ["weeks", "months"]}], "opinion": "We should maintain cultural identities, celebrate festivals, teach traditional skills and protect historic places. But modernization brings benefits like cheaper products and faster construction."}, "cards": [{"zh_question": "传统技能为什么在消失？", "en_answer": "Because of industrialization and global trade. Most products are now made in factories. Machinery has replaced skilled human labour. Clothes are mass produced in standard sizes."}, {"zh_question": "我们应该保护传统文化吗？", "en_answer": "Traditional customs are still important during weddings and festivals. We should maintain cultural identities, celebrate festivals, teach traditional skills and protect historic places."}]}, "22": {"id": 22, "name": "Transport", "name_zh": "交通", "category": "environment", "subtopics": [{"zh": "交通问题", "en": "Traffic problems"}, {"zh": "交通解决方案", "en": "Traffic solutions"}, {"zh": "公共交通的利弊", "en": "Public transport"}, {"zh": "道路安全", "en": "Road safety"}], "ideas": {"for": [{"zh": "我们需要减少对汽车的依赖", "en": "We need to reduce our dependence on cars. Well-designed transport systems are comfortable and convenient", "key_words": ["reduce dependence", "convenient"]}, {"zh": "投资公共交通可以缓解拥堵、减少污染", "en": "Investment in buses and trains will ease traffic congestion. Public transport can help reduce pollution in cities", "key_words": ["investment", "pollution"]}], "against": [{"zh": "公共交通通常慢且不可靠", "en": "Public transport is often slow and unreliable. Metro systems and trains are often dirty and crowded", "key_words": ["slow", "unreliable"]}, {"zh": "交通拥堵是由通勤者造成的", "en": "Traffic congestion is caused by commuters travelling to work. They tend to travel at the same time and alone", "key_words": ["commuters", "same time"]}], "opinion": "Cities should develop efficient public transport. Solutions include working from home, video conferences, flexible timetables, taxing drivers, car sharing, and congestion charges."}, "cards": [{"zh_question": "交通拥堵的原因是什么？", "en_answer": "Traffic congestion is caused by commuters travelling to work. Most people live in suburbs, travel at the same time and alone. Cars and road space are not used efficiently."}, {"zh_question": "如何解决交通问题？", "en_answer": "More people could work from home. Meetings can be held as video conferences. Workers could have flexible timetables. We could tax drivers or introduce congestion charges. Car sharing should be encouraged."}, {"zh_question": "公共交通有什么优缺点？", "en_answer": "Positives: reduce dependence on cars, comfortable, fast, cheap, reduce pollution. Negatives: often slow and unreliable, dirty and crowded, people feel like sardines in a can."}]}, "23": {"id": 23, "name": "Water", "name_zh": "水资源", "category": "environment", "subtopics": [{"zh": "清洁水的重要性", "en": "Importance of clean water"}, {"zh": "水供应", "en": "Water supply"}, {"zh": "水与政治", "en": "Water and politics"}, {"zh": "水应该免费吗？", "en": "Water free or not?"}, {"zh": "瓶装水", "en": "Bottled Water"}], "ideas": {"for": [{"zh": "人类需要清洁安全的饮用水", "en": "Humans need access to clean, safe drinking water in order to live. Poor water quality is a major cause of disease", "key_words": ["clean water", "disease"]}, {"zh": "水应该对所有人免费", "en": "Water should be free for everyone. Governments should supply water to all homes at no cost", "key_words": ["free", "all homes"]}], "against": [{"zh": "如果水免费，人们会浪费", "en": "If water is free, people take it for granted and waste it", "key_words": ["waste"]}, {"zh": "水供应系统非常昂贵，需要投资维护", "en": "Water supply systems are extremely expensive. Investment is needed to maintain and improve them", "key_words": ["expensive", "investment"]}], "opinion": "Clean water is essential for public health. Water supply systems need investment. People should pay a reasonable price to encourage responsible use, but basic access should be guaranteed."}, "cards": [{"zh_question": "为什么清洁水如此重要？", "en_answer": "Humans need access to clean, safe drinking water to live. Poor water quality is a major cause of disease and death in some countries. The supply of clean water would improve public health in developing countries."}, {"zh_question": "水应该免费吗？", "en_answer": "Some believe water should be free for everyone. But if water is free, people waste it. Water supply systems are extremely expensive and need investment. Private companies may provide a better service."}, {"zh_question": "水危机可能导致什么？", "en_answer": "As populations grow, there is more pressure on water supplies. This could lead to a water crisis. Huge amounts of water are needed for agriculture and industry. A water crisis could lead to political conflicts or even wars."}]}, "24": {"id": 24, "name": "Work", "name_zh": "工作", "category": "economy", "subtopics": [{"zh": "终身同一份工作的好处", "en": "Benefits of staying in the same job"}, {"zh": "不留在同一份工作的好处", "en": "Benefits of not staying"}, {"zh": "自主创业", "en": "Self-employment"}, {"zh": "失业", "en": "Unemployment"}, {"zh": "失业救济金", "en": "Unemployment benefits"}, {"zh": "工作与生活的平衡", "en": "Work/Life Balance"}, {"zh": "科技与工作", "en": "Technology and work"}, {"zh": "童工", "en": "Child labour"}], "ideas": {"for": [{"zh": "稳定的职业带来好的养老金和加薪", "en": "Employees have a stable career with good pension and health insurance. Salaries gradually increase", "key_words": ["stable", "pension"]}, {"zh": "自主创业可以追求自己的激情", "en": "Self-employment allows people to be their own boss and pursue their own ideas", "key_words": ["own boss", "ideas"]}], "against": [{"zh": "失业导致经济困难和心理压力", "en": "Unemployment leads to financial difficulties and stress. People lose confidence and feel worthless", "key_words": ["financial", "stress"]}, {"zh": "童工剥夺了儿童受教育的权利", "en": "Child labour prevents children from receiving education. It is exploitative and harmful to their development", "key_words": ["education", "exploitative"]}], "opinion": "Work-life balance is essential. Governments should support unemployed people but also create job opportunities. Child labour should be strictly prohibited. Technology changes how we work but cannot replace human skills entirely."}, "cards": [{"zh_question": "终身做同一份工作有什么好处？", "en_answer": "Employees have a stable career. They have good pension and health insurance. Salaries gradually increase. They demonstrate loyalty and may be promoted. There is a clear development path."}, {"zh_question": "经常换工作有什么好处？", "en_answer": "People gain new experiences and skills. They can compare different working environments. It prevents boredom. They have more opportunities for career advancement."}, {"zh_question": "失业有什么影响？", "en_answer": "Unemployment leads to financial difficulties. People cannot afford basic necessities. It causes stress and loss of confidence. The unemployed may feel worthless. Crime rates may increase."}, {"zh_question": "工作与生活的平衡重要吗？", "en_answer": "Yes. People work long hours and have less time for family and leisure. Stress and health problems increase. Companies should offer flexible working arrangements. Employees should prioritize their well-being."}]}}, "universal_logic": [{"zh": "提高效率、节省时间", "en": "Improve efficiency, save time", "topics": ["科技", "交通", "工作", "教育"]}, {"zh": "创造就业、促进经济", "en": "Create jobs, promote economy", "topics": ["广告", "旅游", "全球化", "体育"]}, {"zh": "增加政府财政负担", "en": "Increase government financial burden", "topics": ["医疗", "教育", "养老", "军队"]}, {"zh": "造成社会不平等", "en": "Cause social inequality", "topics": ["教育", "城市", "医疗", "科技"]}, {"zh": "损害身心健康", "en": "Harm physical and mental health", "topics": ["广告", "手机", "城市", "工作"]}, {"zh": "保护弱势群体", "en": "Protect vulnerable groups", "topics": ["儿童", "老人", "残疾人", "低收入者"]}, {"zh": "政府立法、征税、投资、宣传", "en": "Government legislation, taxation, investment, promotion", "topics": ["环境", "健康", "犯罪", "交通"]}, {"zh": "个人自由与公共利益冲突", "en": "Conflict between personal freedom and public interest", "topics": ["枪支", "审查", "监控", "广告"]}], "review_schedule": {"intervals": [0, 1, 2, 4, 7, 14], "description": "当天 → 第2天 → 第4天 → 第7天 → 第14天"}};
+
+    let reviewData = {};
+    let currentCards = [];
+    let currentCardIdx = 0;
+    let practiceIdeas = [];
+    let practiceIdx = 0;
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        loadReviewData();
+        renderHome();
+        renderCategories();
+        renderAllTopics();
+        renderLogic();
+        initReviewCards();
+        initPracticeCards();
+        populateSelects();
+        updateStats();
+        initNav();
+    });
+
+    function initNav() {
+        document.querySelectorAll('.nav .nav-btn').forEach(b => {
+            b.onclick = () => switchView(b.dataset.view);
+        });
+    }
+
+    function switchView(v) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+        document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === v + '-view'));
+    }
+
+    // RENDER HOME
+    function renderHome() {
+        const grid = document.getElementById('home-grid');
+        const cats = Object.entries(DATA.categories).sort((a,b) => a[1].priority - b[1].priority);
+        grid.innerHTML = cats.map(([k,c]) => {
+            const topicCount = c.topic_ids.filter(id => DATA.topics[id]).length;
+            return `<div class="card" onclick="showCategoryDetail('${k}')">
+                <span class="priority">Priority ${c.priority}</span>
+                <div class="icon">${c.icon}</div>
+                <h3>${c.name}</h3>
+                <p class="en-name">${c.en}</p>
+                <p class="count">${topicCount} topics</p>
+            </div>`;
+        }).join('');
+    }
+
+    // RENDER CATEGORIES
+    function renderCategories() {
+        const grid = document.getElementById('cat-grid');
+        const cats = Object.entries(DATA.categories).sort((a,b) => a[1].priority - b[1].priority);
+        grid.innerHTML = cats.map(([k,c]) => {
+            const topicNames = c.topic_ids.filter(id => DATA.topics[id]).map(id => DATA.topics[id].name_zh);
+            return `<div class="card" onclick="showCategoryDetail('${k}')">
+                <span class="priority">P${c.priority}</span>
+                <div class="icon">${c.icon}</div>
+                <h3>${c.name}</h3>
+                <p class="en-name">${c.en}</p>
+                <div class="tags">${topicNames.map(n => `<span class="tag">${n}</span>`).join('')}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // CATEGORY DETAIL
+    function showCategoryDetail(catKey) {
+        const cat = DATA.categories[catKey];
+        const topics = cat.topic_ids.filter(id => DATA.topics[id]).map(id => DATA.topics[id]);
+        const el = document.getElementById('cat-detail');
+        el.innerHTML = `
+            <button class="back-btn" onclick="switchView('categories')">Back</button>
+            <div class="topic-header">
+                <div style="font-size:2.5rem;margin-bottom:.5rem">${cat.icon}</div>
+                <h2>${cat.name}</h2>
+                <p style="color:var(--text-light)">${cat.en}</p>
+                <p class="subtopics">${topics.map(t => t.name_zh).join(' / ')}</p>
+            </div>
+            <div class="grid">
+                ${topics.map(t => `
+                    <div class="card" onclick="showTopicDetail(${t.id})">
+                        <h3>${t.name_zh}</h3>
+                        <p class="en-name">${t.name}</p>
+                        <div class="tags">
+                            <span class="tag">+ ${t.ideas.for.length} for</span>
+                            <span class="tag">- ${t.ideas.against.length} against</span>
+                            <span class="tag">${(t.cards||[]).length} cards</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+        switchView('cat-detail');
+    }
+
+    // ALL TOPICS
+    function renderAllTopics() {
+        const grid = document.getElementById('all-topics-grid');
+        const topics = Object.values(DATA.topics).sort((a,b) => a.id - b.id);
+        grid.innerHTML = topics.map(t => {
+            const cat = DATA.categories[t.category];
+            return `<div class="card" onclick="showTopicDetail(${t.id})">
+                <span class="priority">${cat.icon} ${cat.name}</span>
+                <h3>${t.name_zh}</h3>
+                <p class="en-name">${t.name}</p>
+                <div class="tags">
+                    <span class="tag">+ ${t.ideas.for.length}</span>
+                    <span class="tag">- ${t.ideas.against.length}</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // TOPIC DETAIL
+    function showTopicDetail(topicId) {
+        const t = DATA.topics[topicId];
+        if (!t) return;
+        const el = document.getElementById('topic-detail');
+        const subtopics = (t.subtopics || []).map(s => `${s.zh} (${s.en})`).join(' | ');
+        el.innerHTML = `
+            <button class="back-btn" onclick="switchView('categories')">Back</button>
+            <div class="topic-header">
+                <h2>${t.name_zh}</h2>
+                <p style="color:var(--text-light)">${t.name}</p>
+                ${subtopics ? `<p class="subtopics">${subtopics}</p>` : ''}
+            </div>
+
+            <div class="section">
+                <h3><span class="badge for-badge">+</span> For (${t.ideas.for.length})</h3>
+                ${t.ideas.for.map(i => `
+                    <div class="idea-item">
+                        <div class="zh">${i.zh}</div>
+                        <div class="en">${i.en}</div>
+                        <div class="keywords">${i.key_words.map(k => `<span class="keyword">${k}</span>`).join('')}</div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="section">
+                <h3><span class="badge against-badge">-</span> Against (${t.ideas.against.length})</h3>
+                ${t.ideas.against.map(i => `
+                    <div class="idea-item">
+                        <div class="zh">${i.zh}</div>
+                        <div class="en">${i.en}</div>
+                        <div class="keywords">${i.key_words.map(k => `<span class="keyword">${k}</span>`).join('')}</div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="section">
+                <h3><span class="badge opinion-badge">!</span> Opinion</h3>
+                <div class="opinion-box">${t.ideas.opinion}</div>
+            </div>`;
+        switchView('topic-detail');
+    }
+
+    // RENDER LOGIC
+    function renderLogic() {
+        const grid = document.getElementById('logic-grid');
+        grid.innerHTML = DATA.universal_logic.map(l => `
+            <div class="logic-card">
+                <h4>${l.zh}</h4>
+                <p class="en">${l.en}</p>
+                <div class="apply-to">${l.topics.map(t => `<span class="apply-tag">${t}</span>`).join('')}</div>
+            </div>
+        `).join('');
+    }
+
+    // FLASHCARD REVIEW
+    function initReviewCards() {
+        currentCards = [];
+        Object.values(DATA.topics).forEach(t => {
+            (t.cards || []).forEach(c => {
+                currentCards.push({
+                    topic_id: t.id,
+                    topic_zh: t.name_zh,
+                    zh: c.zh_question,
+                    en: c.en_answer,
+                    key: t.name_zh + ':' + c.zh_question
+                });
+            });
+        });
+        currentCardIdx = 0;
+        updateCard();
+    }
+
+    function filterReviewCards() {
+        const catVal = document.getElementById('review-cat-select').value;
+        const topicVal = document.getElementById('review-topic-select').value;
+        currentCards = [];
+        Object.values(DATA.topics).forEach(t => {
+            const cat = DATA.categories[t.category];
+            if (catVal !== 'all' && t.category !== catVal) return;
+            if (topicVal !== 'all' && t.id !== parseInt(topicVal)) return;
+            (t.cards || []).forEach(c => {
+                currentCards.push({
+                    topic_id: t.id,
+                    topic_zh: t.name_zh,
+                    zh: c.zh_question,
+                    en: c.en_answer,
+                    key: t.name_zh + ':' + c.zh_question
+                });
+            });
+        });
+        currentCardIdx = 0;
+        updateCard();
+    }
+
+    function updateCard() {
+        if (currentCards.length === 0) {
+            document.getElementById('card-front').textContent = 'No cards in this filter';
+            document.getElementById('card-back').textContent = 'Try another filter';
+            document.getElementById('card-info').textContent = '0 / 0';
+            return;
+        }
+        const c = currentCards[currentCardIdx % currentCards.length];
+        document.getElementById('card-front').textContent = c.zh;
+        document.getElementById('card-back').innerHTML = `<div style="font-size:.85rem;color:var(--text-light);margin-bottom:.5rem">[${c.topic_zh}]</div>${c.en}`;
+        document.getElementById('card-info').textContent = `Card ${currentCardIdx + 1} / ${currentCards.length}`;
+        document.getElementById('flashcard').classList.remove('flipped');
+    }
+
+    function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+
+    function nextCard(known) {
+        if (currentCards.length === 0) return;
+        const c = currentCards[currentCardIdx % currentCards.length];
+        if (!reviewData[c.key]) reviewData[c.key] = {count:0,lastReview:null,nextReview:null};
+        reviewData[c.key].count++;
+        reviewData[c.key].lastReview = Date.now();
+        if (known) {
+            const intervals = DATA.review_schedule.intervals;
+            const level = Math.min(reviewData[c.key].count - 1, intervals.length - 1);
+            reviewData[c.key].nextReview = Date.now() + intervals[level] * 86400000;
+        } else {
+            reviewData[c.key].count = 0;
+            reviewData[c.key].nextReview = Date.now();
+        }
+        saveReviewData();
+        currentCardIdx = (currentCardIdx + 1) % currentCards.length;
+        updateCard();
+        updateStats();
+    }
+
+    function prevCard() {
+        if (currentCards.length === 0) return;
+        currentCardIdx = (currentCardIdx - 1 + currentCards.length) % currentCards.length;
+        updateCard();
+    }
+
+    function shuffleCards() {
+        currentCards = shuffleArray(currentCards);
+        currentCardIdx = 0;
+        updateCard();
+    }
+
+    // PRACTICE
+    function initPracticeCards() {
+        practiceIdeas = [];
+        Object.values(DATA.topics).forEach(t => {
+            t.ideas.for.forEach(i => practiceIdeas.push({...i, topic_zh: t.name_zh, topic_id: t.id, side: 'For'}));
+            t.ideas.against.forEach(i => practiceIdeas.push({...i, topic_zh: t.name_zh, topic_id: t.id, side: 'Against'}));
+        });
+        practiceIdeas = shuffleArray(practiceIdeas);
+        practiceIdx = 0;
+        updatePractice();
+    }
+
+    function filterPracticeTopics() {
+        const catVal = document.getElementById('practice-cat-select').value;
+        const topicSelect = document.getElementById('practice-topic-select');
+        topicSelect.innerHTML = '<option value="all">All Topics</option>';
+        Object.values(DATA.topics).forEach(t => {
+            if (catVal === 'all' || t.category === catVal) {
+                topicSelect.innerHTML += `<option value="${t.id}">${t.name_zh}</option>`;
+            }
+        });
+    }
+
+    function newPractice() {
+        const catVal = document.getElementById('practice-cat-select').value;
+        const topicVal = document.getElementById('practice-topic-select').value;
+        let pool = practiceIdeas;
+        if (topicVal !== 'all') pool = pool.filter(i => i.topic_id === parseInt(topicVal));
+        else if (catVal !== 'all') pool = pool.filter(i => {
+            const t = DATA.topics[i.topic_id];
+            return t && t.category === catVal;
+        });
+        if (pool.length === 0) return;
+        const idea = pool[Math.floor(Math.random() * pool.length)];
+        document.getElementById('p-topic').textContent = idea.topic_zh;
+        document.getElementById('p-side').textContent = idea.side;
+        document.getElementById('p-viewpoint').textContent = idea.en;
+        document.getElementById('p-input').value = '';
+        document.getElementById('p-ref').style.display = 'none';
+        document.getElementById('p-ref').innerHTML = `<div class="hint-box"><strong>Reference:</strong><br>${idea.zh}<br><em>${idea.en}</em></div>`;
+    }
+
+    function updatePractice() { newPractice(); }
+
+    function toggleRef() {
+        const ref = document.getElementById('p-ref');
+        ref.style.display = ref.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // SELECTS
+    function populateSelects() {
+        const cats = Object.entries(DATA.categories).sort((a,b) => a[1].priority - b[1].priority);
+        ['review-cat-select','practice-cat-select'].forEach(id => {
+            const sel = document.getElementById(id);
+            cats.forEach(([k,c]) => {
+                sel.innerHTML += `<option value="${k}">${c.icon} ${c.name}</option>`;
+            });
+        });
+        // Review topic select
+        const rts = document.getElementById('review-topic-select');
+        Object.values(DATA.topics).sort((a,b) => a.id - b.id).forEach(t => {
+            rts.innerHTML += `<option value="${t.id}">${t.name_zh}</option>`;
+        });
+    }
+
+    // STATS & STORAGE
+    function loadReviewData() {
+        const s = localStorage.getItem('ielts-review-v2');
+        if (s) reviewData = JSON.parse(s);
+    }
+    function saveReviewData() { localStorage.setItem('ielts-review-v2', JSON.stringify(reviewData)); }
+
+    function updateStats() {
+        const total = Object.keys(DATA.topics).length;
+        const reviewedTopics = new Set();
+        Object.keys(reviewData).forEach(k => {
+            const topicZh = k.split(':')[0];
+            const t = Object.values(DATA.topics).find(t => t.name_zh === topicZh);
+            if (t) reviewedTopics.add(t.id);
+        });
+        const reviewed = reviewedTopics.size;
+        const mastered = Object.values(reviewData).filter(r => r.count >= 5).length;
+        const due = Object.values(reviewData).filter(r => r.nextReview && r.nextReview <= Date.now()).length;
+        const totalCards = currentCards.length || 1;
+        const accuracy = reviewed > 0 ? Math.round((mastered / Math.max(Object.keys(reviewData).length,1)) * 100) : 0;
+        document.getElementById('s-topics').textContent = reviewed + '/' + total;
+        document.getElementById('s-due').textContent = due;
+        document.getElementById('s-mastered').textContent = mastered;
+        document.getElementById('s-accuracy').textContent = accuracy + '%';
+    }
+
+    function shuffleArray(a) {
+        const arr = [...a];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+    </script>
+</body>
+</html>
