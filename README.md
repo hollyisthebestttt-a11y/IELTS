@@ -110,7 +110,7 @@ Topic sentence → Because → As a result → For example
 
 ### 方式一：直接在本地打开
 
-1. 下载仓库中的 `ielts-practice.html`；
+1. 下载仓库中的 `ielts-practice-fix.html`；
 2. 双击文件，使用浏览器打开；
 3. 无需安装依赖，也无需启动服务器。
 
